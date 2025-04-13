@@ -99,7 +99,23 @@ class AuthController extends Controller
             "status" => "success",
             "error" => false,
             "message" => "User details retrieved successfully.",
-            "data" => $user->load('roles')
+            "data" => [
+                'user' => $user->load('roles'),
+                'borrowed_books' => $user->borrowings()
+                    ->with('book')
+                    ->get()
+                    ->map(function($borrowing) {
+                    return [
+                        'id' => $borrowing->id,
+                        'book_id' => $borrowing->book_id,
+                        'book_title' => $borrowing->book->title,
+                        'borrowed_at' => $borrowing->borrowed_at,
+                        'returned_at' => $borrowing->returned_at
+                    ];
+                })
+            ]
+
+
         ]);
     }
 

@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\Api\BookController;
+use App\Http\Controllers\API\BookController;
 use App\Http\Controllers\API\BorrowingController;
 
 Route::get('/login', function () {
@@ -39,6 +39,6 @@ Route::prefix('books')->controller(BookController::class)->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/borrowings', [BorrowingController::class, 'borrow']);
-    Route::post('/borrowings/{id}/return', [BorrowingController::class, 'returnBook']);
+    Route::post('/borrowing-return/{id}', [BorrowingController::class, 'returnBook']);
     
 });

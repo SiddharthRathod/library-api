@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Events\BookBorrowed;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use App\Events\BookReturned;
 
 class BorrowingController extends Controller
 {
@@ -29,7 +30,7 @@ class BorrowingController extends Controller
 
         $book = Book::find($request->book_id);
         if ($book->status === 'borrowed') {
-            return response()->json(['message' => 'Book already borrowed.'], 422);
+            return response()->json(["status" => "failed", "error" => true, "message" => ["Book already borrowed."]],422);
         }
 
         $borrowing = Borrowing::create([
@@ -42,7 +43,7 @@ class BorrowingController extends Controller
 
         event(new BookBorrowed($borrowing));
 
-        return response()->json(['message' => 'Book borrowed successfully', 'data' => $borrowing]);
+        return response()->json(["status" => "success","error" => false,'message' => 'Book borrowed successfully',"data" => $borrowing]);
     }
 
     public function returnBook($id)
@@ -50,15 +51,17 @@ class BorrowingController extends Controller
         $borrowing = Borrowing::where('id', $id)->where('user_id', Auth::id())->first();
 
         if (!$borrowing) {
-            return response()->json(['message' => 'Borrowing not found.'], 404);
+            return response()->json(["status" => "failed", "error" => true, "message" => ["Borrowing not found."]],404);
         }
 
         if ($borrowing->returned_at) {
-            return response()->json(['message' => 'Book already returned.'], 422);
+            return response()->json(["status" => "failed", "error" => true, "message" => ["Book already returned."]],422);
         }
 
         $borrowing->update(['returned_at' => now()]);
         $borrowing->book->update(['status' => 'available']);
+
+        event(new BookReturned($borrowing));
 
         return response()->json(['message' => 'Book returned successfully', 'data' => $borrowing]);
     }

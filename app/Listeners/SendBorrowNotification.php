@@ -22,6 +22,6 @@ class SendBorrowNotification
      */
     public function handle(BookBorrowed $event): void
     {
-        Log::info("User {$event->borrowing->user->name} borrowed book: {$event->borrowing->book->title}");
+        Log::channel('stack')->info("User {$event->borrowing->user->name} borrowed book: {$event->borrowing->book->title}");
     }
 }
