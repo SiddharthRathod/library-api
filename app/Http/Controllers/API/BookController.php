@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use OpenApi\Annotations as OA;
+
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use Illuminate\Http\Request;
@@ -9,9 +11,60 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @OA\Tag(name="Books", description="API Endpoints for managing books")
+ */
 class BookController extends Controller
 {
     
+    /**
+     * @OA\Get(
+     *     path="/api/books",
+     *     tags={"Books"},
+     *     summary="List all books with filters and pagination",
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Search in title, author, ISBN, or description",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Filter by book status",
+     *         @OA\Schema(type="string", enum={"available", "borrowed"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="sort_by",
+     *         in="query",
+     *         description="Sort field",
+     *         @OA\Schema(type="string", enum={"title", "author", "isbn", "published_at", "status", "created_at"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="sort_order",
+     *         in="query",
+     *         description="Sort direction",
+     *         @OA\Schema(type="string", enum={"asc", "desc"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of books",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="current_page", type="integer"),
+     *             @OA\Property(property="last_page", type="integer"),
+     *             @OA\Property(property="per_page", type="integer"),
+     *             @OA\Property(property="total", type="integer")
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         $search = request('search');
@@ -48,6 +101,31 @@ class BookController extends Controller
         return response()->json($books);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/books/{id}",
+     *     tags={"Books"},
+     *     summary="Get a specific book by ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Book ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Book details",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string"),
+     *             @OA\Property(property="error", type="boolean"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Book not found")
+     * )
+     */
     public function show($id)
     {
         $book = Book::find($id);
@@ -59,6 +137,37 @@ class BookController extends Controller
         return response()->json(["status" => "success","error" => false,'message' => 'Book found successfully', 'data' => $book], 201);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/books",
+     *     tags={"Books"},
+     *     summary="Create a new book",
+     *     security={"bearerAuth": {}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"title","author","isbn"},
+     *             @OA\Property(property="title", type="string"),
+     *             @OA\Property(property="author", type="string"),
+     *             @OA\Property(property="isbn", type="string"),
+     *             @OA\Property(property="published_at", type="string", format="date"),
+     *             @OA\Property(property="status", type="string", enum={"available", "borrowed"}),
+     *             @OA\Property(property="description", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Book created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string"),
+     *             @OA\Property(property="error", type="boolean"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -83,6 +192,43 @@ class BookController extends Controller
 
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/books/{id}",
+     *     tags={"Books"},
+     *     summary="Update a specific book",
+     *     security={"bearerAuth": {}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Book ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="title", type="string"),
+     *             @OA\Property(property="author", type="string"),
+     *             @OA\Property(property="isbn", type="string"),
+     *             @OA\Property(property="published_at", type="string", format="date"),
+     *             @OA\Property(property="status", type="string", enum={"available", "borrowed"}),
+     *             @OA\Property(property="description", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Book updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string"),
+     *             @OA\Property(property="error", type="boolean"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Book not found"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
+     */
     public function update(Request $request, $id)
     {
         $book = Book::find($id);
@@ -112,6 +258,32 @@ class BookController extends Controller
         return response()->json(["status" => "success","error" => false,'message' => 'Book updated successfully', 'data' => $book], 201);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/books/{id}",
+     *     tags={"Books"},
+     *     summary="Delete a specific book",
+     *     security={"bearerAuth": {}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Book ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Book deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string"),
+     *             @OA\Property(property="error", type="boolean"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Book not found"),
+     *     @OA\Response(response=422, description="Book cannot be deleted")
+     * )
+     */
     public function destroy($id)
     {
         $book = Book::find($id);

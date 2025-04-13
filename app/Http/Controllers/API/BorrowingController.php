@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use OpenApi\Annotations as OA;
+
 use App\Models\Book;
 use App\Models\Borrowing;
 use Illuminate\Http\Request;
@@ -12,8 +14,36 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Events\BookReturned;
 
+/**
+ * @OA\Tag(name="Borrowings", description="API Endpoints for book borrowing operations")
+ */
 class BorrowingController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/api/borrowings",
+     *     tags={"Borrowings"},
+     *     summary="Borrow a book",
+     *     security={"bearerAuth": {}},
+     *     @OA\Parameter(
+     *         name="book_id",
+     *         in="query",
+     *         required=true,
+     *         description="Book ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Book borrowed successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="borrowing", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Book not found"),
+     *     @OA\Response(response=403, description="Unauthorized to borrow this book")
+     * )
+     */
     public function borrow(Request $request)
     {
 
@@ -46,6 +76,31 @@ class BorrowingController extends Controller
         return response()->json(["status" => "success","error" => false,'message' => 'Book borrowed successfully',"data" => $borrowing]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/borrowing-return/{id}",
+     *     tags={"Borrowings"},
+     *     summary="Return a borrowed book",
+     *     security={"bearerAuth": {}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Borrowing ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Book returned successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="borrowing", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Borrowing record not found"),
+     *     @OA\Response(response=403, description="Unauthorized to return this book")
+     * )
+     */
     public function returnBook($id)
     {
         $borrowing = Borrowing::where('id', $id)->where('user_id', Auth::id())->first();
