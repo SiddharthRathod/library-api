@@ -1,0 +1,575 @@
+{
+	"info": {
+		"_postman_id": "743e8b9e-5d28-492e-811f-aa2b72e1adf8",
+		"name": "library-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5894434"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Jhon Benson",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "jhonbenson@malinator.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456789",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "123456789",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "user",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LIBRABY_URL}}/api/register",
+							"host": [
+								"{{LIBRABY_URL}}"
+							],
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "admin@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456789",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "fpredovic@example.net",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "123456789",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LIBRABY_URL}}/api/login",
+							"host": [
+								"{{LIBRABY_URL}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{LIBRABY_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{LIBRABY_URL}}/api/user/logout",
+							"host": [
+								"{{LIBRABY_URL}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{LIBRABY_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{LIBRABY_URL}}/api/user/show",
+							"host": [
+								"{{LIBRABY_URL}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"show"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{LIBRABY_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Dr. Wilfredo Nitzsche",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "mikayla36@example.net",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "test123",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LIBRABY_URL}}/api/user/update",
+							"host": [
+								"{{LIBRABY_URL}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "books",
+			"item": [
+				{
+					"name": "Add Book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{LIBRABY_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "C Sub",
+									"type": "text"
+								},
+								{
+									"key": "author",
+									"value": "Manav Ghost",
+									"type": "text"
+								},
+								{
+									"key": "isbn",
+									"value": "66588744521",
+									"type": "text"
+								},
+								{
+									"key": "published_at",
+									"value": "2024-01-01",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "available",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "new edition",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LIBRABY_URL}}/api/books/",
+							"host": [
+								"{{LIBRABY_URL}}"
+							],
+							"path": [
+								"api",
+								"books",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{LIBRABY_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "C Sub",
+									"type": "text"
+								},
+								{
+									"key": "author",
+									"value": "Manav Ghost",
+									"type": "text"
+								},
+								{
+									"key": "isbn",
+									"value": "66588744521",
+									"type": "text"
+								},
+								{
+									"key": "published_at",
+									"value": "2024-01-01",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "available",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "new edition",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LIBRABY_URL}}/api/books/501",
+							"host": [
+								"{{LIBRABY_URL}}"
+							],
+							"path": [
+								"api",
+								"books",
+								"501"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{LIBRABY_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "C Sub",
+									"type": "text"
+								},
+								{
+									"key": "author",
+									"value": "Manav Ghost",
+									"type": "text"
+								},
+								{
+									"key": "isbn",
+									"value": "66588744521",
+									"type": "text"
+								},
+								{
+									"key": "published_at",
+									"value": "2024-01-01",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "available",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "new edition",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LIBRABY_URL}}/api/books/8",
+							"host": [
+								"{{LIBRABY_URL}}"
+							],
+							"path": [
+								"api",
+								"books",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Book Details",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{LIBRABY_URL}}/api/books/9",
+							"host": [
+								"{{LIBRABY_URL}}"
+							],
+							"path": [
+								"api",
+								"books",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Book listing",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{LIBRABY_URL}}/api/books?page=1&status=available&sort_by=id&sort_order=desc",
+							"host": [
+								"{{LIBRABY_URL}}"
+							],
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "manav",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "available",
+									"description": "borrowed,available"
+								},
+								{
+									"key": "sort_by",
+									"value": "id"
+								},
+								{
+									"key": "sort_order",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "borrow",
+			"item": [
+				{
+					"name": "borrow a book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{LIBRABY_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "book_id",
+									"value": "479",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{LIBRABY_URL}}/api/borrowings",
+							"host": [
+								"{{LIBRABY_URL}}"
+							],
+							"path": [
+								"api",
+								"borrowings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "return borrowed book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{LIBRABY_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{LIBRABY_URL}}/api/borrowing-return/513",
+							"host": [
+								"{{LIBRABY_URL}}"
+							],
+							"path": [
+								"api",
+								"borrowing-return",
+								"513"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
