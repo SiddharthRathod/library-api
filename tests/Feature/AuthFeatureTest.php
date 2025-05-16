@@ -8,20 +8,33 @@ use Laravel\Sanctum\Sanctum;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Faker;
 
 class AuthFeatureTest extends TestCase
 {
     use DatabaseTransactions;
 
+    protected $faker;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->faker = \Faker\Factory::create();
+    }
+
     public function test_register_successfully()
     {
         Role::firstOrCreate(['name' => 'user']);
 
+        $name = $this->faker->name();
+        $email = $this->faker->unique()->safeEmail();
+        $password = $this->faker->password(8, 20);
+
         $response = $this->postJson('/api/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'name' => $name,
+            'email' => $email,
+            'password' => $password,
+            'password_confirmation' => $password,
             'role' => 'user'
         ]);
 
@@ -32,7 +45,7 @@ class AuthFeatureTest extends TestCase
     public function test_register_validation_fails()
     {
         $response = $this->postJson('/api/register', [
-            'email' => 'not-an-email'
+            'email' => $this->faker->word() // Invalid email format
         ]);
 
         $response->assertStatus(422)
@@ -41,14 +54,17 @@ class AuthFeatureTest extends TestCase
 
     public function test_login_successfully()
     {
+        $email = $this->faker->unique()->safeEmail();
+        $password = 'password';
+
         $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
+            'email' => $email,
+            'password' => bcrypt($password),
         ]);
 
         $response = $this->postJson('/api/login', [
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'email' => $email,
+            'password' => $password,
         ]);
 
         $response->assertStatus(200)
@@ -57,14 +73,18 @@ class AuthFeatureTest extends TestCase
 
     public function test_login_fails_with_wrong_password()
     {
+        $email = $this->faker->unique()->safeEmail();
+        $correctPassword = $this->faker->password(8, 20);
+        $wrongPassword = $this->faker->password(8, 20) . 'wrong';
+
         $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => bcrypt('correct-password'),
+            'email' => $email,
+            'password' => bcrypt($correctPassword),
         ]);
 
         $response = $this->postJson('/api/login', [
-            'email' => 'test@example.com',
-            'password' => 'wrong-password',
+            'email' => $email,
+            'password' => $wrongPassword,
         ]);
 
         $response->assertStatus(422);
@@ -86,8 +106,10 @@ class AuthFeatureTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
+        $newName = $this->faker->name();
+        
         $response = $this->putJson('api/user/update', [
-            'name' => 'Updated Name'
+            'name' => $newName
         ]);
 
         $response->assertStatus(201)

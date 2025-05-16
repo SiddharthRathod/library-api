@@ -15,7 +15,6 @@ class BookFeatureTest extends TestCase
 {
     use WithFaker, DatabaseTransactions;
 
-
     protected function authenticate()
     {
         $user = User::factory()->create();
